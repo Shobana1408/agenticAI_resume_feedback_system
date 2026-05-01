@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .history-banner {
+            width: 100%;
+            max-height: 240px;
+            object-fit: cover;
+            border-radius: 18px;
+            margin-bottom: 18px;
+        }
+
+        .history-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .history-card {
+            background: linear-gradient(180deg, #ffffff, #fbfdff);
+            border: 1px solid #d9e1f2;
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 8px 18px rgba(31, 60, 136, 0.10);
+        }
+
+        body.dark-theme .history-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+        }
+
+        .history-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .history-meta p {
+            margin: 6px 0;
+        }
+
+        .score-pill {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--primary), var(--primary-2));
+            color: white;
+            padding: 10px 18px;
+            border-radius: 999px;
+            font-weight: 700;
+        }
+
+        .history-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-top: 18px;
+        }
+
+        .soft-section {
+            background: linear-gradient(180deg, #f8fbff, #fffdf7);
+            border: 1px solid #e3ebfb;
+            border-radius: 16px;
+            padding: 16px;
+        }
+
+        body.dark-theme .soft-section {
+            background: var(--soft-bg);
+            border: 1px solid var(--soft-border);
+        }
+
+        .soft-section h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .summary-box {
+            margin-top: 18px;
+            background: linear-gradient(90deg, #eef6ff, #fdf2ff);
+            border: 1px solid #d9e1f2;
+            border-radius: 16px;
+            padding: 16px;
+        }
+
+        body.dark-theme .summary-box {
+            background: var(--info-bg);
+            border: 1px solid var(--soft-border);
+        }
+
+        .question-box {
+            margin-top: 18px;
+            background: linear-gradient(180deg, #fffaf3, #f8fbff);
+            border: 1px solid #e7ddc7;
+            border-radius: 16px;
+            padding: 16px;
+        }
+
+        body.dark-theme .question-box {
+            background: var(--soft-bg);
+            border: 1px solid var(--soft-border);
+        }
+
+        .question-box ul,
+        .soft-section ul {
+            margin: 10px 0 0 18px;
+        }
+
+        .question-box li,
+        .soft-section li {
+            margin-bottom: 8px;
+        }
+
+        .history-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .bulk-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+
+        .danger-btn,
+        .warning-btn {
+            padding: 13px 18px;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .danger-btn {
+            background: linear-gradient(90deg, #dc2626, #ef4444);
+        }
+
+        .warning-btn {
+            background: linear-gradient(90deg, #d97706, #f59e0b);
+        }
+
+        .delete-icon {
+            width: 26px;
+            height: 26px;
+            object-fit: contain;
+        }
+
+        .checkbox-box {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 900px) {
+            .history-sections {
+                grid-template-columns: 1fr;
+            }
+
+            .history-banner {
+                max-height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="theme-toggle-wrap">
+            <button type="button" class="theme-toggle-btn">Switch Theme</button>
+        </div>
+
+        <div class="page-card">
+            <img
+                src="{{ url_for('static', filename='images/history-banner.png') }}"
+                alt="History Banner"
+                class="history-banner"
+            >
+
+            <div>
+                <h1 style="margin-bottom:6px;">Analysis History</h1>
+                <p class="muted" style="margin:0;">Review your previous resume analyses, summaries, and interview questions</p>
+            </div>
+
+            <div class="divider-space"></div>
+
+            <div class="info-strip">
+                <p style="margin:0;">
+                    Select one or more history items to delete them together, or remove all history at once.
+                </p>
+            </div>
+
+            <div class="history-actions">
+                <a href="/dashboard" class="secondary-btn">Back to Dashboard</a>
+                <a href="/upload" class="secondary-btn">Analyze New Resume</a>
+                <a href="/compare" class="secondary-btn">Compare Resumes</a>
+            </div>
+        </div>
+
+        <div class="divider-space"></div>
+
+        {% if success %}
+            <div class="success-msg">{{ success }}</div>
+            <div class="divider-space"></div>
+        {% endif %}
+
+        {% if error %}
+            <div class="error-msg">{{ error }}</div>
+            <div class="divider-space"></div>
+        {% endif %}
+
+        {% if history %}
+            <form action="/delete-selected-history" method="POST">
+                <div class="bulk-actions">
+                    <button type="submit" class="warning-btn">
+                        <img src="{{ url_for('static', filename='icon/delete-icon.png') }}" alt="Delete Icon" class="delete-icon">
+                        Delete Selected
+                    </button>
+                </div>
+
+                <div class="history-grid">
+                    {% for item in history %}
+                        <div class="history-card">
+                            <div class="history-top">
+                                <div class="history-meta">
+                                    <div style="display:flex; align-items:center; gap:10px;">
+                                        <input class="checkbox-box" type="checkbox" name="selected_history" value="{{ item.id }}">
+                                        <h2 style="margin:0; color:var(--primary);">{{ item.target_role }}</h2>
+                                    </div>
+
+                                    <p><strong>Name:</strong> {{ item.student_name }}</p>
+                                    <p><strong>Resume File:</strong> {{ item.filename }}</p>
+                                    <p><strong>Analyzed On:</strong> {{ item.created_at }}</p>
+                                    <p><strong>Match Percentage:</strong> {{ item.match_percentage }}%</p>
+                                </div>
+
+                                <div>
+                                    <span class="score-pill">ATS Score: {{ item.ats_score }}/100</span>
+                                </div>
+                            </div>
+
+                            <div class="summary-box">
+                                <p style="margin:0; color:var(--primary); font-weight:700;">Saved Summary</p>
+                                <p style="margin-top:8px; margin-bottom:0;">{{ item.analysis_summary }}</p>
+                            </div>
+
+                            <div class="history-sections">
+                                <div class="soft-section">
+                                    <h3>Required Skills / Job Description</h3>
+                                    <p style="margin:0;">{{ item.career_goal }}</p>
+                                </div>
+
+                                <div class="soft-section">
+                                    <h3>Matched Skills</h3>
+                                    <div class="tag-list">
+                                        {% for skill in item.matched_skills %}
+                                            <span class="tag">{{ skill }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <div class="soft-section">
+                                    <h3>Missing Skills</h3>
+                                    <div class="tag-list">
+                                        {% for skill in item.missing_skills %}
+                                            <span class="tag">{{ skill }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <div class="soft-section">
+                                    <h3>Interview Settings</h3>
+                                    <p><strong>Difficulty:</strong> {{ item.question_difficulty if item.question_difficulty else "Not generated yet" }}</p>
+                                    <p><strong>Question Count:</strong> {{ item.question_count if item.question_count else "Not generated yet" }}</p>
+                                </div>
+                            </div>
+
+                            <div class="question-box">
+                                <p style="margin:0; color:var(--primary); font-weight:700;">Generated Interview Questions</p>
+
+                                {% if item.generated_questions_list %}
+                                    <ul>
+                                        {% for question in item.generated_questions_list %}
+                                            <li>{{ question }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p style="margin-top:10px; margin-bottom:0;">No questions generated for this analysis yet.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </form>
+
+            <div class="divider-space"></div>
+
+            <form action="/delete-all-history" method="POST">
+                <button type="submit" class="danger-btn">
+                    <img src="{{ url_for('static', filename='icon/delete-icon.png') }}" alt="Delete Icon" class="delete-icon">
+                    Delete All History
+                </button>
+            </form>
+        {% else %}
+            <div class="page-card">
+                <p style="margin:0;">No analysis history available yet.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+</body>
+</html>

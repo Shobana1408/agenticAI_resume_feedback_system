@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Comparison</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .compare-banner {
+    width: 100%;
+    height: 520px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 18px;
+    margin-bottom: 28px;
+    display: block;
+}
+        .compare-table-wrap {
+            overflow-x: auto;
+            margin-top: 16px;
+        }
+
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        .compare-table th,
+        .compare-table td {
+            border: 1px solid #d9e1f2;
+            padding: 14px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .compare-table th {
+            background: linear-gradient(90deg, #eef6ff, #f5edff);
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        body.dark-theme .compare-table th {
+            background: var(--info-bg);
+        }
+
+        .compare-table td {
+            background: white;
+        }
+
+        body.dark-theme .compare-table td {
+            background: var(--card-bg);
+        }
+
+        .resume-name-box {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .score-pill {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--primary), var(--primary-2));
+            color: white;
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .match-pill {
+            display: inline-block;
+            background: linear-gradient(90deg, #0f766e, #14b8a6);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .summary-box {
+            background: linear-gradient(180deg, #f8fbff, #fffdf7);
+            border: 1px solid #e3ebfb;
+            border-radius: 14px;
+            padding: 12px;
+        }
+
+        body.dark-theme .summary-box {
+            background: var(--soft-bg);
+            border: 1px solid var(--soft-border);
+        }
+
+        .mini-note {
+            margin-top: 16px;
+            background: linear-gradient(90deg, #fff8e7, #fff1f2);
+            border: 1px solid #f0dcc6;
+            border-radius: 14px;
+            padding: 14px;
+        }
+
+        body.dark-theme .mini-note {
+            background: var(--soft-bg);
+            border: 1px solid var(--soft-border);
+        }
+
+        @media (max-width: 900px) {
+            .compare-banner {
+                height: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="theme-toggle-wrap">
+            <button type="button" class="theme-toggle-btn">Switch Theme</button>
+        </div>
+
+        <div class="page-card">
+            <img
+                src="{{ url_for('static', filename='images/compare-banner.png') }}"
+                alt="Resume Comparison Banner"
+                class="compare-banner"
+            >
+
+            <div>
+                <h1 style="margin-bottom:6px;">Resume Comparison</h1>
+                <p class="muted" style="margin:0;">Compare your recent resume analyses side by side</p>
+            </div>
+
+            <div class="divider-space"></div>
+
+            <div class="info-strip">
+                <p style="margin:0;">
+                    This page helps you compare poor, normal, and sophisticated resumes using ATS score, skill match percentage, matched skills, missing skills, and saved summary.
+                </p>
+            </div>
+
+            <div class="top-actions">
+                <a href="/dashboard" class="secondary-btn">Back to Dashboard</a>
+                <a href="/upload" class="secondary-btn">Analyze New Resume</a>
+                <a href="/history" class="secondary-btn">View History</a>
+            </div>
+        </div>
+
+        <div class="divider-space"></div>
+
+        {% if comparison_data %}
+            <div class="page-card">
+                <h2 style="margin:0; color:var(--primary);">Comparison Table</h2>
+
+                <div class="compare-table-wrap">
+                    <table class="compare-table">
+                        <thead>
+                            <tr>
+                                <th>Resume File</th>
+                                <th>Target Role</th>
+                                <th>ATS Score</th>
+                                <th>Match %</th>
+                                <th>Matched Skills</th>
+                                <th>Missing Skills</th>
+                                <th>Saved Summary</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for item in comparison_data %}
+                                <tr>
+                                    <td>
+                                        <div class="resume-name-box">{{ item.filename }}</div>
+                                    </td>
+                                    <td>{{ item.target_role }}</td>
+                                    <td><span class="score-pill">{{ item.ats_score }}/100</span></td>
+                                    <td><span class="match-pill">{{ item.match_percentage }}%</span></td>
+                                    <td>
+                                        <div class="tag-list">
+                                            {% for skill in item.matched_skills %}
+                                                <span class="tag">{{ skill }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="tag-list">
+                                            {% for skill in item.missing_skills %}
+                                                <span class="tag">{{ skill }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="summary-box">
+                                            {{ item.analysis_summary }}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mini-note">
+                    <p style="margin:0;">
+                        Tip: Use the same target role and job description for all three resumes to make the comparison fair and meaningful in your presentation.
+                    </p>
+                </div>
+            </div>
+        {% else %}
+            <div class="page-card">
+                <p style="margin:0;">No comparison data available yet. Analyze at least 2 or 3 resumes first.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+</body>
+</html>

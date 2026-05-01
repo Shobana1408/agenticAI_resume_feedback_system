@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container" style="max-width:540px; margin-top:60px;">
+        <div class="theme-toggle-wrap">
+            <button type="button" class="theme-toggle-btn">Switch Theme</button>
+        </div>
+
+        <div class="page-card">
+            <div style="text-align:center;">
+                <h1 style="margin-bottom:6px;">Create Your Account</h1>
+                <p class="muted" style="margin:0;">Register to analyze resumes, compare results, and download reports</p>
+            </div>
+
+            <div class="divider-space"></div>
+
+            <div class="info-strip">
+                <p style="margin:0; text-align:center;">
+                    Create an account to save your ATS analysis, skill-gap results, interview questions, and comparison history.
+                </p>
+            </div>
+
+            <div class="divider-space"></div>
+
+            {% if error %}
+                <div class="error-msg">{{ error }}</div>
+                <div class="divider-space"></div>
+            {% endif %}
+
+            <form action="/register-user" method="POST">
+                <label for="name">Full Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter your full name"
+                    required
+                >
+
+                <label for="email">Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required
+                >
+
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Create your password"
+                    required
+                >
+
+                <div class="divider-space"></div>
+                <button type="submit" class="primary-btn" style="width:100%;">Create Account</button>
+            </form>
+
+            <div class="divider-space"></div>
+
+            <div class="soft-box" style="text-align:center;">
+                <p style="margin:0;">
+                    Already have an account?
+                    <a href="/" style="color:var(--primary); font-weight:700;">Login here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+</body>
+</html>

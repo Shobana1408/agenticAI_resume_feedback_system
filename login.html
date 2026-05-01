@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .login-illustration {
+            width: 180px;
+            display: block;
+            margin: 0 auto 18px auto;
+            border-radius: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="max-width:520px; margin-top:60px;">
+        <div class="theme-toggle-wrap">
+            <button type="button" class="theme-toggle-btn">Switch Theme</button>
+        </div>
+
+        <div class="page-card">
+            <img
+                src="{{ url_for('static', filename='images/login-illustration.png') }}"
+                alt="Login Illustration"
+                class="login-illustration"
+            >
+
+            <div style="text-align:center;">
+                <h1 style="margin-bottom:6px;">Agentic AI Resume Feedback System</h1>
+                <p class="muted" style="margin:0;">Login to continue your resume analysis journey</p>
+            </div>
+
+            <div class="divider-space"></div>
+
+            <div class="info-strip">
+                <p style="margin:0; text-align:center;">
+                    Analyze resumes, compare quality levels, generate interview questions, and download full reports.
+                </p>
+            </div>
+
+            <div class="divider-space"></div>
+
+            {% if error %}
+                <div class="error-msg">{{ error }}</div>
+                <div class="divider-space"></div>
+            {% endif %}
+
+            {% if success %}
+                <div class="success-msg">{{ success }}</div>
+                <div class="divider-space"></div>
+            {% endif %}
+
+            <form action="/login" method="POST">
+                <label for="email">Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required
+                >
+
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                >
+
+                <div class="divider-space"></div>
+                <button type="submit" class="primary-btn" style="width:100%;">Login</button>
+            </form>
+
+            <div class="divider-space"></div>
+
+            <div class="soft-box" style="text-align:center;">
+                <p style="margin:0;">
+                    Don't have an account?
+                    <a href="/register" style="color:var(--primary); font-weight:700;">Register here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+</body>
+</html>

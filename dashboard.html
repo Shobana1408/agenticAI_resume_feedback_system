@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .dashboard-banner {
+            width: 100%;
+            max-height: 240px;
+            object-fit: cover;
+            border-radius: 18px;
+            margin-bottom: 18px;
+        }
+
+        .feature-icon {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto 18px auto;
+        }
+
+        .dashboard-card {
+            min-height: 330px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .dashboard-card-content {
+            flex: 1;
+        }
+
+        .dashboard-card h3,
+        .stat-box h3 {
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+
+        .dashboard-card p,
+        .stat-box p {
+            line-height: 1.4;
+        }
+
+        .dashboard-card .primary-btn,
+        .dashboard-card .secondary-btn {
+            align-self: center;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .stat-box {
+            min-height: 285px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-box .soft-badge {
+            margin-top: auto;
+        }
+
+        @media (max-width: 1000px) {
+            .feature-icon {
+                width: 95px;
+                height: 95px;
+            }
+
+            .dashboard-card {
+                min-height: auto;
+            }
+
+            .stat-box {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="theme-toggle-wrap">
+            <button type="button" class="theme-toggle-btn">Switch Theme</button>
+        </div>
+
+        <div class="page-card">
+            <img
+                src="{{ url_for('static', filename='images/dashboard-banner.png') }}"
+                alt="Dashboard Banner"
+                class="dashboard-banner"
+            >
+
+            <div>
+                <h1 style="margin-bottom:6px;">Student Dashboard</h1>
+                <p class="muted" style="margin:0;">Welcome, <strong>{{ user_name }}</strong></p>
+            </div>
+
+            <div class="divider-space"></div>
+
+            <div class="info-strip">
+                <p style="margin:0;">
+                    Manage your resume analysis, compare different resume quality levels, track history, download reports, and prepare for interviews from one place.
+                </p>
+            </div>
+        </div>
+
+        <div class="divider-space"></div>
+
+        <div class="grid-4">
+            <div class="card dashboard-card">
+                <div class="dashboard-card-content">
+                    <img src="{{ url_for('static', filename='icon/resume-icon.png') }}" alt="Resume Icon" class="feature-icon">
+                    <h3>Upload Resume</h3>
+                    <p class="muted">Upload your resume and add the target role requirements for complete analysis.</p>
+                </div>
+                <a href="/upload" class="primary-btn">Go to Upload</a>
+            </div>
+
+            <div class="card dashboard-card">
+                <div class="dashboard-card-content">
+                    <img src="{{ url_for('static', filename='icon/history-icon.png') }}" alt="History Icon" class="feature-icon">
+                    <h3>View History</h3>
+                    <p class="muted">Review ATS scores, missing skills, summaries, and generated interview questions.</p>
+                </div>
+                <a href="/history" class="primary-btn">Open History</a>
+            </div>
+
+            <div class="card dashboard-card">
+                <div class="dashboard-card-content">
+                    <img src="{{ url_for('static', filename='icon/compare-icon.png') }}" alt="Compare Icon" class="feature-icon">
+                    <h3>Compare Resumes</h3>
+                    <p class="muted">Compare poor, normal, and sophisticated resume results side by side.</p>
+                </div>
+                <a href="/compare" class="primary-btn">Open Comparison</a>
+            </div>
+
+            <div class="card dashboard-card">
+                <div class="dashboard-card-content">
+                    <img src="{{ url_for('static', filename='icon/logout-icon.png') }}" alt="Logout Icon" class="feature-icon">
+                    <h3>Logout</h3>
+                    <p class="muted">Exit your current session securely and return to the login page.</p>
+                </div>
+                <a href="/logout" class="secondary-btn">Logout</a>
+            </div>
+        </div>
+
+        <div class="divider-space"></div>
+
+        <div class="grid-3">
+            <div class="stat-box">
+                <img src="{{ url_for('static', filename='icon/analysis-icon.png') }}" alt="Analysis Icon" class="feature-icon">
+                <h3>ATS + Skill Gap</h3>
+                <p class="muted">Check ATS readiness, target-skill match, missing skills, and improvement suggestions.</p>
+                <span class="soft-badge">Core Analysis</span>
+            </div>
+
+            <div class="stat-box">
+                <img src="{{ url_for('static', filename='icon/question-icon.png') }}" alt="Question Icon" class="feature-icon">
+                <h3>Interview Prep</h3>
+                <p class="muted">Generate interview questions by choosing difficulty level and number of questions.</p>
+                <span class="soft-badge">AI Questions</span>
+            </div>
+
+            <div class="stat-box">
+                <img src="{{ url_for('static', filename='icon/pdf-icon.png') }}" alt="PDF Icon" class="feature-icon">
+                <h3>PDF Report</h3>
+                <p class="muted">Download your complete analysis report as a PDF for records and presentation.</p>
+                <span class="soft-badge">Downloadable</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+</body>
+</html>

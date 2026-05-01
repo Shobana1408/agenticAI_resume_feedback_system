@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Resume</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .helper-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .mini-card {
+            background: white;
+            border: 1px solid #e5edff;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 6px 14px rgba(31, 60, 136, 0.08);
+        }
+
+        body.dark-theme .mini-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+        }
+
+        .mini-card h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .upload-banner {
+            width: 100%;
+            max-height: 220px;
+            object-fit: cover;
+            border-radius: 18px;
+            margin-bottom: 18px;
+        }
+
+        @media (max-width: 900px) {
+            .helper-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="theme-toggle-wrap">
+            <button type="button" class="theme-toggle-btn">Switch Theme</button>
+        </div>
+
+        <div class="page-card">
+            <img
+                src="{{ url_for('static', filename='images/upload-banner.png') }}"
+                alt="Upload Banner"
+                class="upload-banner"
+            >
+
+            <div>
+                <h1 style="margin-bottom:6px;">Upload Resume</h1>
+                <p class="muted" style="margin:0;">Add your resume and target job requirements for complete analysis</p>
+            </div>
+
+            <div class="divider-space"></div>
+
+            <div class="info-strip">
+                <p style="margin:0;">
+                    The system will calculate ATS score, check skill gap, generate suggestions, create interview questions, and let you download the final report.
+                </p>
+            </div>
+
+            <div class="divider-space"></div>
+
+            {% if error %}
+                <div class="error-msg">{{ error }}</div>
+                <div class="divider-space"></div>
+            {% endif %}
+
+            <form action="/analyze" method="POST" enctype="multipart/form-data">
+                <label for="role">Target Role</label>
+                <input
+                    type="text"
+                    id="role"
+                    name="role"
+                    placeholder="Example: Generative AI Engineer"
+                    required
+                >
+
+                <label for="resume">Upload Resume</label>
+                <input
+                    type="file"
+                    id="resume"
+                    name="resume"
+                    accept=".pdf,.docx"
+                    required
+                >
+
+                <label for="job_description">Required Skills / Job Description</label>
+                <textarea
+                    id="job_description"
+                    name="job_description"
+                    rows="8"
+                    placeholder="Paste the required skills or job description here"
+                    required
+                ></textarea>
+
+                <div class="divider-space"></div>
+                <button type="submit" class="primary-btn" style="width:100%;">Analyze Resume</button>
+            </form>
+        </div>
+
+        <div class="divider-space"></div>
+
+        <div class="helper-grid">
+            <div class="mini-card">
+                <h3 style="margin:0;">Example Input</h3>
+                <p class="muted" style="margin-bottom:8px;"><strong>Target Role:</strong> Generative AI Engineer</p>
+                <p class="muted" style="margin:0;">
+                    <strong>Required Skills / Job Description:</strong>
+                    I want to apply for a Generative AI Engineer role. The required skills for this role include Python, Generative Modeling, Natural Language Processing, Machine Learning Algorithms, Data Synthesis Techniques, API Integration, Prompt Engineering, LLM Integration, Problem Solving, and Workflow Automation.
+                </p>
+            </div>
+
+            <div class="mini-card">
+                <h3 style="margin:0;">Tips for Better Results</h3>
+                <ul style="margin:10px 0 0 18px;">
+                    <li>Use a clear target role.</li>
+                    <li>Paste exact company/job requirements.</li>
+                    <li>Upload a clean PDF or DOCX resume.</li>
+                    <li>Use the same job description when comparing 3 resumes.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="divider-space"></div>
+
+        <div class="page-card">
+            <div class="top-actions">
+                <a href="/dashboard" class="secondary-btn">Back to Dashboard</a>
+                <a href="/history" class="secondary-btn">View History</a>
+                <a href="/compare" class="secondary-btn">Compare Resumes</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+</body>
+</html>
